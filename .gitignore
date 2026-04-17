@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (large files, fetched at runtime)
+data/raw/
+data/processed/
+*.tif
+*.tiff
+*.nc
+*.h5
+*.hdf5
+
+# Model weights
+models/
+checkpoints/
+*.pt
+*.pth
+*.onnx
+*.engine
+*.trt
+
+# Logs
+logs/
+*.log
+wandb/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SimSat reference (cloned repo, not tracked)
+simsat-reference/
+
+# Worktrees
+.worktrees/
+
+# Environment
+.env
+.env.local
+
+# Internal dev notes (not for public)
+HERMES.md
+
+# Implementation plan (internal, not for public)
+docs/IMPLEMENTATION_PLAN.md
