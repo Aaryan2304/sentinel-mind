@@ -34,8 +34,8 @@ data/processed/
 *.hdf5
 
 # Model weights
-models/
-checkpoints/
+/models/
+/checkpoints/
 *.pt
 *.pth
 *.onnx
