@@ -26,15 +26,21 @@ echo "Satellite: lon=$LON, lat=$LAT, alt=${ALT}km"
 echo "Time: $TS"
 echo "Bands: $BAND1, $BAND2, $BAND3"
 
-# Fetch image
-HTTP_CODE=$(curl -s -o "$OUTPUT" -w "%{http_code}" \
-  "http://localhost:9005/data/image/sentinel?lon=$LON&lat=$LAT&timestamp=$TS&spectral_bands=$BAND1&spectral_bands=$BAND2&spectral_bands=$BAND3&size_km=5.0&return_type=png")
+# Fetch image (with headers to check metadata)
+HEADERS=$(curl -s -D - -o "$OUTPUT" \
+  "http://localhost:9005/data/image/sentinel?lon=$LON&lat=$LAT&timestamp=$TS&spectral_bands=$BAND1&spectral_bands=$BAND2&spectral_bands=$BAND3&size_km=5.0&return_type=png" 2>&1)
 
-if [ "$HTTP_CODE" != "200" ]; then
-    echo "ERROR: HTTP $HTTP_CODE"
-    exit 1
+# Check if image is actually available
+AVAILABLE=$(echo "$HEADERS" | grep -o '"image_available": [a-z]*' | head -1 | cut -d' ' -f2)
+CLOUD=$(echo "$HEADERS" | grep -o '"cloud_cover": [0-9.]*' | head -1 | cut -d' ' -f2)
+
+if [ "$AVAILABLE" = "false" ]; then
+    echo "No image available at this position (ocean, polar, or no data)"
+    rm -f "$OUTPUT"
+    exit 0
 fi
 
+echo "Cloud cover: ${CLOUD}%"
 SIZE=$(stat -c%s "$OUTPUT" 2>/dev/null || stat -f%z "$OUTPUT" 2>/dev/null)
 echo "Image saved: $OUTPUT ($SIZE bytes)"
 
